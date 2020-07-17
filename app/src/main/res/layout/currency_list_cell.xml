@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <ImageView
+        android:id="@+id/currencyListCellImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_launcher_round"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/currencyListCellTitle"/>
+    
+    <TextView
+        android:id="@+id/currencyListCellTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EUR"
+        app:layout_constraintStart_toEndOf="@id/currencyListCellImage"
+        app:layout_constraintTop_toTopOf="@id/currencyListCellImage"
+        app:layout_constraintBottom_toTopOf="@id/currencyListCellDescription"
+        app:layout_constraintEnd_toStartOf="@id/currencyListCellEdit"/>
+
+    <TextView
+        android:id="@+id/currencyListCellDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Euro"
+        app:layout_constraintStart_toEndOf="@id/currencyListCellImage"
+        app:layout_constraintTop_toBottomOf="@id/currencyListCellTitle"
+        app:layout_constraintBottom_toBottomOf="@id/currencyListCellImage"
+        app:layout_constraintEnd_toStartOf="@id/currencyListCellEdit"/>
+
+    <EditText
+        android:id="@+id/currencyListCellEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="100"
+        android:inputType="numberDecimal"
+        app:layout_constraintTop_toTopOf="@id/currencyListCellImage"
+        app:layout_constraintBottom_toBottomOf="@id/currencyListCellImage"
+        app:layout_constraintStart_toEndOf="@id/currencyListCellTitle"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
