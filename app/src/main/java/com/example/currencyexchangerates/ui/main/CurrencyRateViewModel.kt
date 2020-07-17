@@ -2,6 +2,6 @@ package com.example.currencyexchangerates.ui.main
 
 import androidx.lifecycle.ViewModel
 
-class MainViewModel : ViewModel() {
+class CurrencyRateViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 }
