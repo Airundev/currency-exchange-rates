@@ -7,6 +7,7 @@ Currency exchange rate converter that uses a public Revolut API for the exchange
 This project is built purely with Kotlin with an MVVP design pattern, Retrofit to fetch the API data, Koin to manage dependencies and Rx to manage asynchronous tasks.
 
 # Why did you choose to do that?
+I'm pretty sure you already know why I went with Kotlin. I mean, come on.
 
 MVVM is just more fun to play around with than MVP, even though I can't really say it's inherently better (I simply love LiveData).
 
