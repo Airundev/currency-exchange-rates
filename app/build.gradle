@@ -38,7 +38,9 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
-    implementation "org.koin:koin-core:2.1.6"
-    testImplementation "org.koin:koin-test:2.1.6"
-
+    implementation "org.koin:koin-android:2.1.6"
+    implementation "org.koin:koin-android-scope:2.1.6"
+    implementation "org.koin:koin-android-viewmodel:2.1.6"
+    implementation 'com.squareup.retrofit2:retrofit:2.2.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
 }
