@@ -7,8 +7,6 @@ import io.reactivex.Single
 class CurrencyRateRemoteDatasource: CurrencyRateDatasource {
 
     override fun getCurrencyRateModel(param: String): Single<CurrencyRatesModel> {
-        return Single.create {
-            ServiceBuilder.buildService().getCurrencies(param)
-        }
+        return ServiceBuilder.buildService().getCurrencies(param)
     }
 }
