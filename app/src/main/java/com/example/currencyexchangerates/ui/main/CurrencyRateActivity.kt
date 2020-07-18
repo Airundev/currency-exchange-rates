@@ -1,8 +1,8 @@
-package com.example.currencyexchangerates
+package com.example.currencyexchangerates.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.currencyexchangerates.ui.main.CurrencyRateFragment
+import com.example.currencyexchangerates.R
 
 class CurrencyRateActivity : AppCompatActivity() {
 
