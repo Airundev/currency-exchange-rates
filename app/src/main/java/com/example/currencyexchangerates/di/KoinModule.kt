@@ -1,11 +1,11 @@
 package com.example.currencyexchangerates.di
 
-import com.example.currencyexchangerates.data.CurrencyRateRepository
+import com.example.currencyexchangerates.data.datasource.CurrencyRateDatasource
+import com.example.currencyexchangerates.data.datasource.CurrencyRateRemoteDatasource
+import com.example.currencyexchangerates.data.repository.CurrencyRateRepository
+import com.example.currencyexchangerates.data.repository.CurrencyRateRepositoryImpl
 import com.example.currencyexchangerates.domain.CurrencyRateUseCase
 import com.example.currencyexchangerates.ui.main.CurrencyRateViewModel
-import com.example.currencyexchangerates.utils.AppRxSchedulers
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.schedulers.Schedulers
 import org.koin.dsl.module
 
 class KoinModule {
@@ -13,9 +13,9 @@ class KoinModule {
     companion object {
         val appModule = module {
 
-            factory { AppRxSchedulers(Schedulers.io(), AndroidSchedulers.mainThread()) }
-            single { CurrencyRateRepository() }
-            single { CurrencyRateUseCase(get(), get()) }
+            single<CurrencyRateDatasource> { CurrencyRateRemoteDatasource() }
+            single<CurrencyRateRepository> { CurrencyRateRepositoryImpl(get()) }
+            single { CurrencyRateUseCase(get()) }
             factory { CurrencyRateViewModel(get()) }
         }
     }

@@ -1,21 +1,20 @@
 package com.example.currencyexchangerates.domain
 
-import com.example.currencyexchangerates.data.CurrencyRateRepository
-import com.example.currencyexchangerates.utils.AppRxSchedulers
-import io.reactivex.rxjava3.disposables.Disposable
+import com.example.currencyexchangerates.data.repository.CurrencyRateRepository
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 class CurrencyRateUseCase(
-    val repository: CurrencyRateRepository,
-    val rxSchedulers: AppRxSchedulers
+    val repository: CurrencyRateRepository
 ) :SolidUseCaseWithParameter<String, CurrencyRateListener> {
     override fun execute(parameter: String, listener: CurrencyRateListener): Disposable {
         return repository.getCurrencies(parameter)
-            .subscribeOn(rxSchedulers.background)
-            .observeOn(rxSchedulers.main)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    //TODO: Make it so success receives a list of currencies
-                    listener.onSuccess()
+                    listener.onSuccess(it)
                 }, {
                     //TODO: Fix this
                     listener.onError(Throwable())
