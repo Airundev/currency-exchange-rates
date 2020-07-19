@@ -4,5 +4,5 @@ data class CurrencyListCellItem (
     val image: Int,
     val title: String,
     val description: String,
-    val value: Double
+    val value: String
 )
