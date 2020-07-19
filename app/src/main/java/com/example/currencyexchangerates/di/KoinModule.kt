@@ -6,6 +6,7 @@ import com.example.currencyexchangerates.data.repository.CurrencyRateRepository
 import com.example.currencyexchangerates.data.repository.CurrencyRateRepositoryImpl
 import com.example.currencyexchangerates.domain.CurrencyRateUseCase
 import com.example.currencyexchangerates.ui.main.CurrencyRateViewModel
+import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 class KoinModule {
@@ -16,7 +17,7 @@ class KoinModule {
             single<CurrencyRateDatasource> { CurrencyRateRemoteDatasource() }
             single<CurrencyRateRepository> { CurrencyRateRepositoryImpl(get()) }
             single { CurrencyRateUseCase(get()) }
-            factory { CurrencyRateViewModel(get()) }
+            viewModel { CurrencyRateViewModel(get()) }
         }
     }
 }
