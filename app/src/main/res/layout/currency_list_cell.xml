@@ -1,55 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    
-    <ImageView
-        android:id="@+id/currencyListCellImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher_round"
-        android:padding="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/currencyListCellTitle"/>
-    
-    <TextView
-        android:id="@+id/currencyListCellTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="EUR"
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:paddingTop="16dp"
-        app:layout_constraintStart_toEndOf="@id/currencyListCellImage"
-        app:layout_constraintTop_toTopOf="@id/currencyListCellImage"
-        app:layout_constraintBottom_toTopOf="@id/currencyListCellDescription"/>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/currencyListCellDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Euro"
-        android:paddingBottom="16dp"
-        app:layout_constraintStart_toStartOf="@id/currencyListCellTitle"
-        app:layout_constraintTop_toBottomOf="@id/currencyListCellTitle"
-        app:layout_constraintBottom_toBottomOf="@id/currencyListCellImage"
-        app:layout_constraintEnd_toEndOf="@id/currencyListCellTitle"/>
+    <data>
+        <variable
+            name="item"
+            type="com.example.currencyexchangerates.ui.components.CurrencyListCellItem" />
+    </data>
 
-    <EditText
-        android:id="@+id/currencyListCellEdit"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="1183.06"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:inputType="numberDecimal"
-        app:layout_constraintTop_toTopOf="@id/currencyListCellImage"
-        app:layout_constraintBottom_toBottomOf="@id/currencyListCellImage"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:focusable="true"
+        android:clickable="true">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/currencyListCellImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@{item.image}"
+            tools:src="@mipmap/ic_launcher"
+            android:padding="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/currencyListCellTitle"/>
+
+        <TextView
+            android:id="@+id/currencyListCellTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.title}"
+            tools:text="EUR"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:paddingTop="16dp"
+            app:layout_constraintStart_toEndOf="@id/currencyListCellImage"
+            app:layout_constraintTop_toTopOf="@id/currencyListCellImage"
+            app:layout_constraintBottom_toTopOf="@id/currencyListCellDescription"/>
+
+        <TextView
+            android:id="@+id/currencyListCellDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{item.description}"
+            tools:text="Euro"
+            android:paddingBottom="16dp"
+            app:layout_constraintStart_toStartOf="@id/currencyListCellTitle"
+            app:layout_constraintTop_toBottomOf="@id/currencyListCellTitle"
+            app:layout_constraintBottom_toBottomOf="@id/currencyListCellImage"
+            app:layout_constraintEnd_toEndOf="@id/currencyListCellTitle"/>
+
+        <EditText
+            android:id="@+id/currencyListCellEdit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@{item.value}"
+            tools:text="1183.06"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:inputType="numberDecimal"
+            app:layout_constraintTop_toTopOf="@id/currencyListCellImage"
+            app:layout_constraintBottom_toBottomOf="@id/currencyListCellImage"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
