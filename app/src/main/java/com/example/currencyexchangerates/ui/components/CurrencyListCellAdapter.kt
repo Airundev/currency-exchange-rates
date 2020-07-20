@@ -13,7 +13,7 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
 
     private val items: MutableList<CurrencyListCellItem> = mutableListOf()
 
-    private var listener: CurrencyListCellListener? = null
+    var listener: CurrencyListCellListener? = null
 
     private var binding: ViewDataBinding? = null
 

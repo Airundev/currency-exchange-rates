@@ -1,12 +1,14 @@
 package com.example.currencyexchangerates.domain
 
 import com.example.currencyexchangerates.data.repository.CurrencyRateRepository
+import com.example.currencyexchangerates.domain.utils.CurrencyRateUIMapper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 class CurrencyRateUseCase(
-    val repository: CurrencyRateRepository
+    private val repository: CurrencyRateRepository,
+    private val mapper: CurrencyRateUIMapper
 ) :SolidUseCaseWithParameter<String, CurrencyRateListener> {
     override fun execute(parameter: String, listener: CurrencyRateListener): Disposable {
         return repository.getCurrencies(parameter)
@@ -14,10 +16,9 @@ class CurrencyRateUseCase(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    listener.onSuccess(it)
+                    listener.onSuccess(mapper.map(it))
                 }, {
-                    //TODO: Fix this
-                    listener.onError(Throwable())
+                    listener.onError(it)
                 }
             )
     }
