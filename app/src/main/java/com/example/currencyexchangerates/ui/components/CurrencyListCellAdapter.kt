@@ -2,6 +2,7 @@ package com.example.currencyexchangerates.ui.components
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.get
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
@@ -36,6 +37,12 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
     fun setItems(newItems: List<CurrencyListCellItem>) {
         items.clear()
         items.addAll(newItems)
+        notifyDataSetChanged()
+    }
+
+    fun onCellClicked(item: CurrencyListCellItem) {
+        items.remove(item)
+        items.add(0, item)
         notifyDataSetChanged()
     }
 
