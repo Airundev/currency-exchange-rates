@@ -1,8 +1,8 @@
-# currency-exchange-rates
+# What is this?
 
 Currency exchange rate converter that uses a public Revolut API for the exchange rates
 
-# Tech stack
+# What did you use?
 
 This project is built purely with Kotlin with an MVVM design pattern, Retrofit to fetch the API data, Koin to manage dependencies and Rx to manage asynchronous tasks.
 
