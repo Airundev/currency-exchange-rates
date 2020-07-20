@@ -4,7 +4,7 @@ import com.example.currencyexchangerates.data.datasource.CurrencyRateRemoteDatas
 import com.example.currencyexchangerates.data.model.CurrencyRatesModel
 import io.reactivex.Single
 
-class CurrencyRateRepositoryImpl(val remoteDatasource: CurrencyRateRemoteDatasource)
+class CurrencyRateRepositoryImpl(private val remoteDatasource: CurrencyRateRemoteDatasource)
     : CurrencyRateRepository {
 
     override fun getCurrencies(param: String): Single<CurrencyRatesModel> {

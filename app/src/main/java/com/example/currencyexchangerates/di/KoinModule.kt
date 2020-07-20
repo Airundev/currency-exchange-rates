@@ -1,6 +1,5 @@
 package com.example.currencyexchangerates.di
 
-import com.example.currencyexchangerates.data.datasource.CurrencyRateDatasource
 import com.example.currencyexchangerates.data.datasource.CurrencyRateRemoteDatasource
 import com.example.currencyexchangerates.data.repository.CurrencyRateRepository
 import com.example.currencyexchangerates.data.repository.CurrencyRateRepositoryImpl
@@ -14,7 +13,7 @@ class KoinModule {
     companion object {
         val appModule = module {
 
-            single<CurrencyRateDatasource> { CurrencyRateRemoteDatasource() }
+            single { CurrencyRateRemoteDatasource() }
             single<CurrencyRateRepository> { CurrencyRateRepositoryImpl(get()) }
             single { CurrencyRateUseCase(get()) }
             viewModel { CurrencyRateViewModel(get()) }

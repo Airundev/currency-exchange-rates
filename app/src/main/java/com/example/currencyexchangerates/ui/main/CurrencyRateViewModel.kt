@@ -7,13 +7,10 @@ import com.example.currencyexchangerates.domain.CurrencyRateListener
 import com.example.currencyexchangerates.domain.CurrencyRateUseCase
 import com.example.currencyexchangerates.ui.components.CurrencyListCellItem
 import com.example.currencyexchangerates.ui.main.utils.LiveDataResult
-import io.reactivex.disposables.Disposable
 
 class CurrencyRateViewModel(
-    val currencyRateUseCase: CurrencyRateUseCase
+    private val currencyRateUseCase: CurrencyRateUseCase
 ) : ViewModel(), CurrencyRateListener {
-
-    private var disposable: Disposable? = null
 
     private val _liveDataResult: MutableLiveData<LiveDataResult<List<CurrencyListCellItem>>> by lazy {
         MutableLiveData<LiveDataResult<List<CurrencyListCellItem>>>()
