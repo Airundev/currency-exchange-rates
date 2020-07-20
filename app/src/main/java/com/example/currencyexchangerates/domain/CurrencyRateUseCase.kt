@@ -14,10 +14,10 @@ class CurrencyRateUseCase(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    listener.onSuccess(it)
+                    //TODO: Implement data to UI mapper
+                    //listener.onSuccess(it)
                 }, {
-                    //TODO: Fix this
-                    listener.onError(Throwable())
+                    listener.onError(it)
                 }
             )
     }

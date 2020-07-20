@@ -1,8 +1,8 @@
 package com.example.currencyexchangerates.domain
 
-import com.example.currencyexchangerates.data.model.CurrencyRatesModel
+import com.example.currencyexchangerates.ui.components.CurrencyListCellItem
 
 interface CurrencyRateListener {
-    fun onSuccess(ratesModel: CurrencyRatesModel)
+    fun onSuccess(ratesList: List<CurrencyListCellItem>)
     fun onError(error: Throwable)
 }
