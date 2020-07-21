@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.currencyexchangerates.R
 import com.example.currencyexchangerates.ui.components.CurrencyListCellAdapter
 import com.example.currencyexchangerates.ui.components.CurrencyListCellItem
+import com.example.currencyexchangerates.ui.main.utils.LifecycleAwareTimer
 import com.example.currencyexchangerates.ui.main.utils.LiveDataResult
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -19,6 +20,10 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
     private lateinit var adapter: CurrencyListCellAdapter
 
     private lateinit var progressDialog: ProgressDialog
+
+    private val timer: LifecycleAwareTimer by lazy {
+        LifecycleAwareTimer(::onTimerTick)
+    }
 
     private val resultObserver = Observer<LiveDataResult<List<CurrencyListCellItem>>> { result ->
         when (result.status) {
@@ -45,12 +50,18 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
 
         progressDialog = ProgressDialog(this)
 
+        lifecycle.addObserver(timer)
+
         currencyRateViewModel.liveDataResult.observe(this, resultObserver)
         currencyRateViewModel.start()
     }
 
     override fun onCurrencyCellClicked(item: CurrencyListCellItem) {
         adapter.onCellClicked(item)
+    }
+
+    private fun onTimerTick() {
+        currencyRateViewModel.updateList()
     }
 
     private fun showProgressDialog() {
