@@ -1,5 +1,6 @@
 package com.example.currencyexchangerates.ui.main
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -17,17 +18,19 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
 
     private lateinit var adapter: CurrencyListCellAdapter
 
+    private lateinit var progressDialog: ProgressDialog
+
     private val resultObserver = Observer<LiveDataResult<List<CurrencyListCellItem>>> { result ->
         when (result.status) {
             LiveDataResult.Status.SUCCESS -> {
-                //TODO: Implement progressDialog and hide it here
+                hideProgressDialog()
                 result.data?.let { adapter.setItems(it) }
             }
             LiveDataResult.Status.LOADING -> {
-                //TODO: Implement progressDialog and show it here
+                showProgressDialog()
             }
             LiveDataResult.Status.ERROR -> {
-                //TODO: Implement progressDialog and hide it here
+                hideProgressDialog()
             }
         }
     }
@@ -40,11 +43,25 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
+        progressDialog = ProgressDialog(this)
+
         currencyRateViewModel.liveDataResult.observe(this, resultObserver)
-        currencyRateViewModel.updateList()
+        currencyRateViewModel.start()
     }
 
     override fun onCurrencyCellClicked(item: CurrencyListCellItem) {
         adapter.onCellClicked(item)
+    }
+
+    private fun showProgressDialog() {
+        if (!progressDialog.isShowing) {
+            progressDialog.setTitle(getString(R.string.loading))
+            progressDialog.setMessage(getString(R.string.wait))
+            progressDialog.show()
+        }
+    }
+
+    private fun hideProgressDialog() {
+        if (progressDialog.isShowing) progressDialog.dismiss()
     }
 }

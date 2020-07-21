@@ -19,8 +19,12 @@ class CurrencyRateViewModel(
     val liveDataResult: LiveData<LiveDataResult<List<CurrencyListCellItem>>>
         get() = _liveDataResult
 
-    fun updateList() {
+    fun start() {
         _liveDataResult.postValue(LiveDataResult.loading(null))
+        currencyRateUseCase.execute(BASE_CURRENCY, this)
+    }
+
+    fun updateList() {
         currencyRateUseCase.execute(BASE_CURRENCY, this)
     }
 

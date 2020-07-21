@@ -34,4 +34,6 @@
     <string name="USD">United States Dollar</string>
     <string name="ZAR">South African Rand</string>
     <string name="Unknown">Unknown</string>
+    <string name="loading">Loading…</string>
+    <string name="wait">Please wait…</string>
 </resources>
