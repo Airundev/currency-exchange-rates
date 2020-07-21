@@ -1,18 +1,29 @@
 package com.example.currencyexchangerates.domain.utils
 
-import com.example.currencyexchangerates.R
 import com.example.currencyexchangerates.data.model.CurrencyRatesModel
 import com.example.currencyexchangerates.ui.components.CurrencyListCellItem
 
-class CurrencyRateUIMapper() {
+class CurrencyRateUIMapper(private val dataMapper: CurrencyRateDataMapper) {
 
     fun map(model: CurrencyRatesModel): List<CurrencyListCellItem> {
         val itemList = mutableListOf<CurrencyListCellItem>()
-        //TODO: Prepare it for any flag, name and map the correct description
-        itemList.add(CurrencyListCellItem(R.drawable.ic_eur, model.baseCurrency, "Euro", "1"))
+        var currencyData: Pair<Int, String> = dataMapper.getDataForCurrency(model.baseCurrency)
+
+        itemList.add(CurrencyListCellItem(
+            currencyData.first,
+            model.baseCurrency,
+            currencyData.second,
+            "1"))
+
         for (rate in model.rates) {
-            itemList.add(CurrencyListCellItem(R.drawable.ic_eur, rate.key, "LUL", rate.value.toString()))
+            currencyData = dataMapper.getDataForCurrency(rate.key)
+            itemList.add(CurrencyListCellItem(
+                currencyData.first,
+                rate.key,
+                currencyData.second,
+                rate.value.toString()))
         }
+
         return itemList
     }
 }
