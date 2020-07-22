@@ -12,11 +12,11 @@ class CurrencyRateViewModel(
     private val currencyRateUseCase: CurrencyRateUseCase
 ) : ViewModel(), CurrencyRateListener {
 
-    private val _liveDataResult: MutableLiveData<LiveDataResult<List<CurrencyListCellItem>>> by lazy {
-        MutableLiveData<LiveDataResult<List<CurrencyListCellItem>>>()
+    private val _liveDataResult: MutableLiveData<LiveDataResult<MutableList<CurrencyListCellItem>>> by lazy {
+        MutableLiveData<LiveDataResult<MutableList<CurrencyListCellItem>>>()
     }
 
-    val liveDataResult: LiveData<LiveDataResult<List<CurrencyListCellItem>>>
+    val liveDataResult: LiveData<LiveDataResult<MutableList<CurrencyListCellItem>>>
         get() = _liveDataResult
 
     fun start() {
@@ -24,11 +24,11 @@ class CurrencyRateViewModel(
         currencyRateUseCase.execute(BASE_CURRENCY, this)
     }
 
-    fun updateList() {
-        currencyRateUseCase.execute(BASE_CURRENCY, this)
+    fun updateList(baseCurrency: String) {
+        currencyRateUseCase.execute(baseCurrency, this)
     }
 
-    override fun onSuccess(ratesList: List<CurrencyListCellItem>) {
+    override fun onSuccess(ratesList: MutableList<CurrencyListCellItem>) {
         _liveDataResult.postValue(LiveDataResult.success(ratesList))
     }
 

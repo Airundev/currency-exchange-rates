@@ -7,12 +7,12 @@ import androidx.databinding.BindingAdapter
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.example.currencyexchangerates.BR
+import com.example.currencyexchangerates.R
 
 class DataBindingViewHolder(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: Any, listener: Any?) {
+    fun bind(item: Any) {
         binding.setVariable(BR.item, item)
-        binding.setVariable(BR.listener, listener)
         binding.executePendingBindings()
     }
 
@@ -25,7 +25,7 @@ class DataBindingViewHolder(private val binding: ViewDataBinding) : RecyclerView
                     AppCompatResources.getDrawable(imageView.context, resourceId)
                 imageView.setImageDrawable(drawable)
             } else {
-                imageView.setImageResource(0)
+                imageView.setImageResource(R.drawable.ic_unknown)
             }
         }
     }

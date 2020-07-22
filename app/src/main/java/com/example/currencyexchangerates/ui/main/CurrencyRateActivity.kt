@@ -25,11 +25,12 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
         LifecycleAwareTimer(::onTimerTick)
     }
 
-    private val resultObserver = Observer<LiveDataResult<List<CurrencyListCellItem>>> { result ->
+    private val resultObserver = Observer<LiveDataResult<MutableList<CurrencyListCellItem>>> { result ->
         when (result.status) {
             LiveDataResult.Status.SUCCESS -> {
                 hideProgressDialog()
                 result.data?.let { adapter.setItems(it) }
+                //lifecycle.addObserver(timer)
             }
             LiveDataResult.Status.LOADING -> {
                 showProgressDialog()
@@ -50,18 +51,16 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
 
         progressDialog = ProgressDialog(this)
 
-        lifecycle.addObserver(timer)
-
         currencyRateViewModel.liveDataResult.observe(this, resultObserver)
         currencyRateViewModel.start()
     }
 
-    override fun onCurrencyCellClicked(item: CurrencyListCellItem) {
-        adapter.onCellClicked(item)
+    override fun onCurrencyCellClicked() {
+        recyclerView.layoutManager?.scrollToPosition(0)
     }
 
     private fun onTimerTick() {
-        currencyRateViewModel.updateList()
+        currencyRateViewModel.updateList(adapter.baseItemCurrency ?: CurrencyRateViewModel.BASE_CURRENCY)
     }
 
     private fun showProgressDialog() {

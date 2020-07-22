@@ -5,7 +5,7 @@ import com.example.currencyexchangerates.ui.components.CurrencyListCellItem
 
 class CurrencyRateUIMapper(private val dataMapper: CurrencyRateDataMapper) {
 
-    fun map(model: CurrencyRatesModel): List<CurrencyListCellItem> {
+    fun map(model: CurrencyRatesModel): MutableList<CurrencyListCellItem> {
         val itemList = mutableListOf<CurrencyListCellItem>()
         var currencyData: Pair<Int, String> = dataMapper.getDataForCurrency(model.baseCurrency)
 

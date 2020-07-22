@@ -5,20 +5,16 @@
         <variable
             name="item"
             type="com.example.currencyexchangerates.ui.components.CurrencyListCellItem" />
-
-        <variable
-            name="listener"
-            type="com.example.currencyexchangerates.ui.components.CurrencyListCellAdapter.CurrencyListCellListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/currencyListCellLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="true"
-        android:clickable="true"
-        android:onClick="@{() -> listener.onCurrencyCellClicked(item)" >
+        android:clickable="true" >
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/currencyListCellImage"
@@ -69,7 +65,7 @@
             android:inputType="numberDecimal"
             app:layout_constraintTop_toTopOf="@id/currencyListCellImage"
             app:layout_constraintBottom_toBottomOf="@id/currencyListCellImage"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
