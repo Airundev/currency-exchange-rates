@@ -30,7 +30,7 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
             LiveDataResult.Status.SUCCESS -> {
                 hideProgressDialog()
                 result.data?.let { adapter.setItems(it) }
-                //lifecycle.addObserver(timer)
+                lifecycle.addObserver(timer)
             }
             LiveDataResult.Status.LOADING -> {
                 showProgressDialog()
@@ -52,7 +52,7 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
         progressDialog = ProgressDialog(this)
 
         currencyRateViewModel.liveDataResult.observe(this, resultObserver)
-        currencyRateViewModel.start()
+        currencyRateViewModel.start(adapter.baseItemCurrency)
     }
 
     override fun onCurrencyCellClicked() {
@@ -60,7 +60,7 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
     }
 
     private fun onTimerTick() {
-        currencyRateViewModel.updateList(adapter.baseItemCurrency ?: CurrencyRateViewModel.BASE_CURRENCY)
+        currencyRateViewModel.updateList(adapter.baseItemCurrency)
     }
 
     private fun showProgressDialog() {

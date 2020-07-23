@@ -5,11 +5,9 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.currencyexchangerates.R
-import com.example.currencyexchangerates.ui.components.utils.CurrencyRateDiffCallback
+import com.example.currencyexchangerates.databinding.CurrencyListCellBinding
 import com.example.currencyexchangerates.ui.components.utils.DataBindingViewHolder
 import kotlinx.android.synthetic.main.currency_list_cell.view.*
 import java.util.*
@@ -18,11 +16,11 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
 
     private var items: MutableList<CurrencyListCellItem> = mutableListOf()
 
-    var baseItemCurrency: String? = null
+    var baseItemCurrency: String = "EUR"
 
     private var listener: CurrencyListCellListener? = null
 
-    private var binding: ViewDataBinding? = null
+    private var binding: CurrencyListCellBinding? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBindingViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)
@@ -44,22 +42,25 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
     override fun getItemCount(): Int = items.size
 
     fun setItems(newItems: MutableList<CurrencyListCellItem>) {
-        val diffResult = DiffUtil.calculateDiff(
+        /*val diffResult = DiffUtil.calculateDiff(
             CurrencyRateDiffCallback(
                 items,
                 newItems
             )
         )
         this.items = newItems
-        diffResult.dispatchUpdatesTo(this)
+        diffResult.dispatchUpdatesTo(this)*/
+        items.clear()
+        items.addAll(newItems)
+        notifyDataSetChanged()
     }
 
     private fun setOnClickListener(holder: DataBindingViewHolder, position: Int) {
         holder.itemView.currencyListCellLayout.setOnClickListener {
+            baseItemCurrency = items[position].title
             Collections.swap(items, position, 0)
             notifyItemMoved(position, 0)
             listener?.onCurrencyCellClicked()
-            baseItemCurrency = items[position].title
             holder.itemView.currencyListCellEdit.requestFocus()
         }
     }

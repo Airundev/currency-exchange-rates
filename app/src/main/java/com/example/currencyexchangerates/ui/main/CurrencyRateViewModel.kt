@@ -19,9 +19,9 @@ class CurrencyRateViewModel(
     val liveDataResult: LiveData<LiveDataResult<MutableList<CurrencyListCellItem>>>
         get() = _liveDataResult
 
-    fun start() {
+    fun start(baseCurrency: String) {
         _liveDataResult.postValue(LiveDataResult.loading(null))
-        currencyRateUseCase.execute(BASE_CURRENCY, this)
+        currencyRateUseCase.execute(baseCurrency, this)
     }
 
     fun updateList(baseCurrency: String) {
@@ -34,9 +34,5 @@ class CurrencyRateViewModel(
 
     override fun onError(error: Throwable) {
         _liveDataResult.postValue(LiveDataResult.error("", null))
-    }
-
-    companion object {
-        const val BASE_CURRENCY: String = "EUR"
     }
 }
