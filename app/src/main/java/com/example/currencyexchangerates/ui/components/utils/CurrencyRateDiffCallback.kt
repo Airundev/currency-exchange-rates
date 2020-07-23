@@ -17,10 +17,15 @@ class CurrencyRateDiffCallback(
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldCurrencies[oldItemPosition].currencyCode === newCurrencies[newItemPosition].currencyCode
+        return oldCurrencies[oldItemPosition].currencyValue === newCurrencies[newItemPosition].currencyValue
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldCurrencies[oldItemPosition] == newCurrencies[newItemPosition]
     }
+
+    override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any? =
+        CurrencyAmountDifference(newCurrencies[newItemPosition].currencyValue)
 }
+
+data class CurrencyAmountDifference(val newCurrencyValue: String?)
