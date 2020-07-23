@@ -13,7 +13,7 @@ class CurrencyRateUIMapper(private val dataMapper: CurrencyRateDataMapper) {
             currencyData.first,
             model.baseCurrency,
             currencyData.second,
-            "1"))
+            1.00))
 
         for (rate in model.rates) {
             currencyData = dataMapper.getDataForCurrency(rate.key)
@@ -21,7 +21,7 @@ class CurrencyRateUIMapper(private val dataMapper: CurrencyRateDataMapper) {
                 currencyData.first,
                 rate.key,
                 currencyData.second,
-                rate.value.toString()))
+                rate.value))
         }
 
         return itemList

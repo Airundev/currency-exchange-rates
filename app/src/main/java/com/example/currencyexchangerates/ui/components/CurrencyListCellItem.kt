@@ -1,8 +1,8 @@
 package com.example.currencyexchangerates.ui.components
 
 data class CurrencyListCellItem (
-    val image: Int,
-    val title: String,
-    val description: String,
-    val value: String
+    val currencyFlag: Int,
+    val currencyCode: String,
+    val currencyName: String,
+    val currencyRate: Double
 )

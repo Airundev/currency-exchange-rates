@@ -17,7 +17,7 @@ class CurrencyRateDiffCallback(
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldCurrencies[oldItemPosition].title === newCurrencies[newItemPosition].title
+        return oldCurrencies[oldItemPosition].currencyCode === newCurrencies[newItemPosition].currencyCode
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
