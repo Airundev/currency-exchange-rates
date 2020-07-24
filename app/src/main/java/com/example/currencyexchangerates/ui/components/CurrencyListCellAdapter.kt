@@ -32,10 +32,10 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
         binding = DataBindingUtil.inflate(inflater, viewType, parent, false)
         val viewHolder = DataBindingViewHolder(binding!!)
         viewHolder.itemView.setOnClickListener { setOnClickListener(viewHolder, viewHolder.adapterPosition) }
-        viewHolder.itemView.currencyListCellEdit.apply { setOnFocusChangeListener { view, focused ->
+        viewHolder.itemView.currencyListCellEdit.apply { setOnFocusChangeListener { _, focused ->
             when(focused) {
-                true -> addTextChangedListener(textWatcher(viewHolder.adapterPosition))
-                false -> removeTextChangedListener(textWatcher(viewHolder.adapterPosition))
+                true -> addTextChangedListener(textWatcher())
+                false -> removeTextChangedListener(textWatcher())
             }}
         }
         return viewHolder
@@ -96,14 +96,15 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
         fun onCurrencyCellClicked()
     }
 
-    private fun textWatcher(position: Int): TextWatcher {
+    private fun textWatcher(): TextWatcher {
         return object: TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 baseValue = if (p0.toString() == "") { "0.00" } else { p0.toString() }
                 for (item in items) {
-                    if (position != 0) {
+                    if (item.currencyCode != items[0].currencyCode) {
                         val df = DecimalFormat("0.00")
                         item.currencyValue = df.format(baseValue.toDouble().times(item.currencyRate))
+                        notifyItemChanged(items.indexOf(item), CurrencyValueDifference(item.currencyValue))
                     }
                 }
             }
