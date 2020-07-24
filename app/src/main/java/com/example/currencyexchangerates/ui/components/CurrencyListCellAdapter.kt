@@ -31,11 +31,14 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)
         binding = DataBindingUtil.inflate(inflater, viewType, parent, false)
         val viewHolder = DataBindingViewHolder(binding!!)
-        viewHolder.itemView.setOnClickListener { setOnClickListener(viewHolder, viewHolder.adapterPosition) }
+        viewHolder.itemView.setOnClickListener { viewHolder.itemView.currencyListCellEdit.requestFocus() }
         viewHolder.itemView.currencyListCellEdit.apply { setOnFocusChangeListener { _, focused ->
             when(focused) {
-                true -> addTextChangedListener(textWatcher())
-                false -> removeTextChangedListener(textWatcher())
+                true -> {
+                    onCurrencyClicked(viewHolder, viewHolder.adapterPosition)
+                    addTextChangedListener(textWatcher)
+                }
+                false -> removeTextChangedListener(textWatcher)
             }}
         }
         return viewHolder
@@ -43,14 +46,10 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
 
     override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int) {
         val item = items[position]
-        if (holder.adapterPosition == 0) {
-            holder.itemView.currencyListCellEdit.requestFocus()
-            item.currencyValue = baseValue
-        }
         with(holder.itemView.currencyListCellEdit) {
+            val df = DecimalFormat("0.00")
+            item.currencyValue = df.format(baseValue.toDouble().times(item.currencyRate))
             if (!isFocused) {
-                val df = DecimalFormat("0.00")
-                item.currencyValue = df.format(baseValue.toDouble().times(item.currencyRate))
                 setText(item.currencyValue)
             }
         }
@@ -84,7 +83,7 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private fun setOnClickListener(holder: DataBindingViewHolder, position: Int) {
+    private fun onCurrencyClicked(holder: DataBindingViewHolder, position: Int) {
         baseItemCurrency = items[position].currencyCode
         Collections.swap(items, position, 0)
         notifyItemMoved(position, 0)
@@ -96,21 +95,18 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
         fun onCurrencyCellClicked()
     }
 
-    private fun textWatcher(): TextWatcher {
-        return object: TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-                baseValue = if (p0.toString() == "") { "0.00" } else { p0.toString() }
-                for (item in items) {
-                    if (item.currencyCode != items[0].currencyCode) {
-                        val df = DecimalFormat("0.00")
-                        item.currencyValue = df.format(baseValue.toDouble().times(item.currencyRate))
-                        notifyItemChanged(items.indexOf(item), CurrencyValueDifference(item.currencyValue))
-                    }
+    private val textWatcher: TextWatcher = object: TextWatcher {
+        override fun afterTextChanged(p0: Editable?) {
+            baseValue = if (p0.toString() == "") { "0.00" } else { p0.toString() }
+            for (item in items) {
+                if (item.currencyCode != items[0].currencyCode) {
+                    val df = DecimalFormat("0.00")
+                    item.currencyValue = df.format(baseValue.toDouble().times(item.currencyRate))
+                    notifyItemChanged(items.indexOf(item), CurrencyValueDifference(item.currencyValue))
                 }
             }
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
         }
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
     }
 }
