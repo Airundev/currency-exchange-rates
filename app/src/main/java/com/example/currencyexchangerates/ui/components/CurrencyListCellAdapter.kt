@@ -74,6 +74,10 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
 
     override fun getItemCount(): Int = items.size
 
+    override fun getItemId(position: Int): Long {
+        return items[position].currencyCode.hashCode().toLong()
+    }
+
     fun setItems(newItems: MutableList<CurrencyListCellItem>) {
         val diffResult = DiffUtil.calculateDiff(CurrencyRateDiffCallback(items, newItems))
         items = newItems
@@ -100,7 +104,6 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
                     if (position != 0) {
                         val df = DecimalFormat("0.00")
                         item.currencyValue = df.format(baseValue.toDouble().times(item.currencyRate))
-                        notifyItemChanged(position)
                     }
                 }
             }
