@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.example.currencyexchangerates.R
 import com.example.currencyexchangerates.ui.components.CurrencyListCellAdapter
 import com.example.currencyexchangerates.ui.components.CurrencyListCellItem
@@ -12,6 +13,7 @@ import com.example.currencyexchangerates.ui.main.utils.LifecycleAwareTimer
 import com.example.currencyexchangerates.ui.main.utils.LiveDataResult
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.android.viewmodel.ext.android.viewModel
+
 
 class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.CurrencyListCellListener {
 
@@ -46,8 +48,10 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
         setContentView(R.layout.main_activity)
 
         adapter = CurrencyListCellAdapter()
+        adapter.setHasStableIds(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
+        (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
         progressDialog = ProgressDialog(this)
 

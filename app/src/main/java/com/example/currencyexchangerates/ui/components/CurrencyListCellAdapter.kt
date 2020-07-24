@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.currencyexchangerates.R
 import com.example.currencyexchangerates.databinding.CurrencyListCellBinding
-import com.example.currencyexchangerates.ui.components.utils.CurrencyAmountDifference
 import com.example.currencyexchangerates.ui.components.utils.CurrencyRateDiffCallback
+import com.example.currencyexchangerates.ui.components.utils.CurrencyValueDifference
 import com.example.currencyexchangerates.ui.components.utils.DataBindingViewHolder
 import kotlinx.android.synthetic.main.currency_list_cell.view.*
 import java.text.DecimalFormat
@@ -34,8 +34,8 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
         viewHolder.itemView.setOnClickListener { setOnClickListener(viewHolder, viewHolder.adapterPosition) }
         viewHolder.itemView.currencyListCellEdit.apply { setOnFocusChangeListener { view, focused ->
             when(focused) {
-                true -> { addTextChangedListener(textWatcher()) }
-                false -> removeTextChangedListener(textWatcher())
+                true -> addTextChangedListener(textWatcher(viewHolder.adapterPosition))
+                false -> removeTextChangedListener(textWatcher(viewHolder.adapterPosition))
             }}
         }
         return viewHolder
@@ -43,10 +43,9 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
 
     override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int) {
         val item = items[position]
-        holder.bind(item)
         if (holder.adapterPosition == 0) {
             holder.itemView.currencyListCellEdit.requestFocus()
-            holder.itemView.currencyListCellEdit.setText(item.currencyValue)
+            item.currencyValue = baseValue
         }
         with(holder.itemView.currencyListCellEdit) {
             if (!isFocused) {
@@ -55,6 +54,7 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
                 setText(item.currencyValue)
             }
         }
+        holder.bind(item)
     }
 
     override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int, payloads: MutableList<Any>) {
@@ -62,7 +62,7 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
             true -> onBindViewHolder(holder, position)
             false -> with(holder.itemView.currencyListCellEdit) {
                 if (!isFocused) {
-                    setText((payloads[0] as CurrencyAmountDifference).newCurrencyValue)
+                    setText((payloads[0] as CurrencyValueDifference).newCurrencyValue)
                 }
             }
         }
@@ -75,12 +75,7 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
     override fun getItemCount(): Int = items.size
 
     fun setItems(newItems: MutableList<CurrencyListCellItem>) {
-        val diffResult = DiffUtil.calculateDiff(
-            CurrencyRateDiffCallback(
-                items,
-                newItems
-            )
-        )
+        val diffResult = DiffUtil.calculateDiff(CurrencyRateDiffCallback(items, newItems))
         items = newItems
         diffResult.dispatchUpdatesTo(this)
     }
@@ -97,11 +92,17 @@ class CurrencyListCellAdapter : RecyclerView.Adapter<DataBindingViewHolder>() {
         fun onCurrencyCellClicked()
     }
 
-    private fun textWatcher(): TextWatcher {
+    private fun textWatcher(position: Int): TextWatcher {
         return object: TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
-                baseValue = p0.toString()
-                //notifyDataSetChanged()
+                baseValue = if (p0.toString() == "") { "0.00" } else { p0.toString() }
+                for (item in items) {
+                    if (position != 0) {
+                        val df = DecimalFormat("0.00")
+                        item.currencyValue = df.format(baseValue.toDouble().times(item.currencyRate))
+                        notifyItemChanged(position)
+                    }
+                }
             }
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
