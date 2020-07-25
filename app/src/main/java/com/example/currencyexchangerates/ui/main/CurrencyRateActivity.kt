@@ -1,6 +1,5 @@
 package com.example.currencyexchangerates.ui.main
 
-import android.app.ProgressDialog
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -19,8 +18,6 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
 
     private lateinit var adapter: CurrencyListCellAdapter
 
-    private lateinit var progressDialog: ProgressDialog
-
     private val timer: LifecycleAwareTimer by lazy {
         LifecycleAwareTimer(::onTimerTick)
     }
@@ -28,15 +25,16 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
     private val resultObserver = Observer<LiveDataResult<MutableList<CurrencyListCellItem>>> { result ->
         when (result.status) {
             LiveDataResult.Status.SUCCESS -> {
-                hideProgressDialog()
+                swipeLayout.isRefreshing = false
                 result.data?.let { adapter.updateItems(it) }
                 lifecycle.addObserver(timer)
             }
             LiveDataResult.Status.LOADING -> {
-                showProgressDialog()
+                swipeLayout.isRefreshing = true
             }
             LiveDataResult.Status.ERROR -> {
-                hideProgressDialog()
+                swipeLayout.isRefreshing = false
+                timer.onPause()
             }
         }
     }
@@ -47,10 +45,9 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
 
         adapter = CurrencyListCellAdapter(this)
         adapter.setHasStableIds(true)
+        swipeLayout.setOnRefreshListener { timer.onResume() }
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
-
-        progressDialog = ProgressDialog(this)
 
         currencyRateViewModel.liveDataResult.observe(this, resultObserver)
         currencyRateViewModel.start()
@@ -69,17 +66,5 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
 
     private fun onTimerTick() {
         currencyRateViewModel.updateList(adapter.items)
-    }
-
-    private fun showProgressDialog() {
-        if (!progressDialog.isShowing) {
-            progressDialog.setTitle(getString(R.string.loading))
-            progressDialog.setMessage(getString(R.string.wait))
-            progressDialog.show()
-        }
-    }
-
-    private fun hideProgressDialog() {
-        if (progressDialog.isShowing) progressDialog.dismiss()
     }
 }
