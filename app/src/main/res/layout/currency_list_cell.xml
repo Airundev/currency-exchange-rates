@@ -5,26 +5,22 @@
         <variable
             name="item"
             type="com.example.currencyexchangerates.ui.components.CurrencyListCellItem" />
-
-        <variable
-            name="listener"
-            type="com.example.currencyexchangerates.ui.components.CurrencyListCellAdapter.CurrencyListCellListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/currencyListCellLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="true"
-        android:clickable="true"
-        android:onClick="@{() -> listener.onCurrencyCellClicked(item)" >
+        android:clickable="true" >
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/currencyListCellImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@{item.image}"
+            app:srcCompat="@{item.currencyFlag}"
             tools:src="@mipmap/ic_launcher"
             android:layout_margin="16dp"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +32,7 @@
             android:id="@+id/currencyListCellTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{item.title}"
+            android:text="@{item.currencyCode}"
             tools:text="EUR"
             android:textStyle="bold"
             android:textSize="16sp"
@@ -50,7 +46,7 @@
             android:id="@+id/currencyListCellDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{item.description}"
+            android:text="@{item.currencyName}"
             tools:text="Euro"
             android:layout_marginBottom="8dp"
             app:layout_constraintStart_toStartOf="@id/currencyListCellTitle"
@@ -62,14 +58,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:text="@{item.value}"
             tools:text="1183.06"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:maxLength="19"
             android:inputType="numberDecimal"
             app:layout_constraintTop_toTopOf="@id/currencyListCellImage"
             app:layout_constraintBottom_toBottomOf="@id/currencyListCellImage"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

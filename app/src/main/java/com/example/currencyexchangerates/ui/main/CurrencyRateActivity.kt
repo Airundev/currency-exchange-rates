@@ -25,11 +25,12 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
         LifecycleAwareTimer(::onTimerTick)
     }
 
-    private val resultObserver = Observer<LiveDataResult<List<CurrencyListCellItem>>> { result ->
+    private val resultObserver = Observer<LiveDataResult<MutableList<CurrencyListCellItem>>> { result ->
         when (result.status) {
             LiveDataResult.Status.SUCCESS -> {
                 hideProgressDialog()
-                result.data?.let { adapter.setItems(it) }
+                result.data?.let { adapter.updateItems(it) }
+                lifecycle.addObserver(timer)
             }
             LiveDataResult.Status.LOADING -> {
                 showProgressDialog()
@@ -44,24 +45,30 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        adapter = CurrencyListCellAdapter()
+        adapter = CurrencyListCellAdapter(this)
+        adapter.setHasStableIds(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
         progressDialog = ProgressDialog(this)
 
-        lifecycle.addObserver(timer)
-
         currencyRateViewModel.liveDataResult.observe(this, resultObserver)
         currencyRateViewModel.start()
     }
 
-    override fun onCurrencyCellClicked(item: CurrencyListCellItem) {
-        adapter.onCellClicked(item)
+    override fun onCurrencyCellClicked(baseCurrency: String, baseValue: String) {
+        currencyRateViewModel.baseCurrency = baseCurrency
+        currencyRateViewModel.baseValue = baseValue
+        recyclerView.layoutManager?.scrollToPosition(0)
+    }
+
+    override fun onBaseValueUpdated(baseValue: String) {
+        currencyRateViewModel.baseValue = baseValue
+        currencyRateViewModel.updateValues(adapter.items)
     }
 
     private fun onTimerTick() {
-        currencyRateViewModel.updateList()
+        currencyRateViewModel.updateList(adapter.items)
     }
 
     private fun showProgressDialog() {

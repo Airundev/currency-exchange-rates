@@ -8,35 +8,37 @@ import com.example.currencyexchangerates.domain.CurrencyRateUseCase
 import com.example.currencyexchangerates.ui.components.CurrencyListCellItem
 import com.example.currencyexchangerates.ui.main.utils.LiveDataResult
 
-class CurrencyRateViewModel(
-    private val currencyRateUseCase: CurrencyRateUseCase
-) : ViewModel(), CurrencyRateListener {
+class CurrencyRateViewModel(private val currencyRateUseCase: CurrencyRateUseCase)
+    : ViewModel(), CurrencyRateListener {
 
-    private val _liveDataResult: MutableLiveData<LiveDataResult<List<CurrencyListCellItem>>> by lazy {
-        MutableLiveData<LiveDataResult<List<CurrencyListCellItem>>>()
+    var baseCurrency = "EUR"
+    var baseValue = "1.00"
+
+    private val _liveDataResult: MutableLiveData<LiveDataResult<MutableList<CurrencyListCellItem>>> by lazy {
+        MutableLiveData<LiveDataResult<MutableList<CurrencyListCellItem>>>()
     }
 
-    val liveDataResult: LiveData<LiveDataResult<List<CurrencyListCellItem>>>
+    val liveDataResult: LiveData<LiveDataResult<MutableList<CurrencyListCellItem>>>
         get() = _liveDataResult
 
     fun start() {
         _liveDataResult.postValue(LiveDataResult.loading(null))
-        currencyRateUseCase.execute(BASE_CURRENCY, this)
+        currencyRateUseCase.getData(baseCurrency, baseValue, this)
     }
 
-    fun updateList() {
-        currencyRateUseCase.execute(BASE_CURRENCY, this)
+    fun updateList(currentList: MutableList<CurrencyListCellItem>) {
+        currencyRateUseCase.updateData(baseCurrency, baseValue, currentList, this)
     }
 
-    override fun onSuccess(ratesList: List<CurrencyListCellItem>) {
+    fun updateValues(currentList: MutableList<CurrencyListCellItem>) {
+        currencyRateUseCase.updateValues(baseValue, currentList, this)
+    }
+
+    override fun onSuccess(ratesList: MutableList<CurrencyListCellItem>) {
         _liveDataResult.postValue(LiveDataResult.success(ratesList))
     }
 
     override fun onError(error: Throwable) {
         _liveDataResult.postValue(LiveDataResult.error("", null))
-    }
-
-    companion object {
-        const val BASE_CURRENCY: String = "EUR"
     }
 }
