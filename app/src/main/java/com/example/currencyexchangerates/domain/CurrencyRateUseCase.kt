@@ -1,25 +1,20 @@
 package com.example.currencyexchangerates.domain
 
-import com.example.currencyexchangerates.data.repository.CurrencyRateRepository
-import com.example.currencyexchangerates.domain.utils.CurrencyRateUIMapper
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.example.currencyexchangerates.ui.components.CurrencyListCellItem
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 
-class CurrencyRateUseCase(
-    private val repository: CurrencyRateRepository,
-    private val mapper: CurrencyRateUIMapper
-) :SolidUseCaseWithParameter<String, CurrencyRateListener> {
-    override fun execute(parameter: String, listener: CurrencyRateListener): Disposable {
-        return repository.getCurrencies(parameter)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    listener.onSuccess(mapper.map(it))
-                }, {
-                    listener.onError(it)
-                }
-            )
-    }
+
+interface CurrencyRateUseCase {
+    fun getData(baseCurrency: String,
+                baseValue: String,
+                listener: CurrencyRateListener): Disposable
+
+    fun updateData(baseCurrency: String,
+                   baseValue: String,
+                   currentList: MutableList<CurrencyListCellItem>,
+                   listener: CurrencyRateListener): Disposable
+
+    fun updateValues(baseValue: String,
+                     currentList: MutableList<CurrencyListCellItem>,
+                     listener: CurrencyRateListener)
 }

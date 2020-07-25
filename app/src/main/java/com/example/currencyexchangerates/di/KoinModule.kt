@@ -4,6 +4,7 @@ import com.example.currencyexchangerates.data.datasource.CurrencyRateRemoteDatas
 import com.example.currencyexchangerates.data.repository.CurrencyRateRepository
 import com.example.currencyexchangerates.data.repository.CurrencyRateRepositoryImpl
 import com.example.currencyexchangerates.domain.CurrencyRateUseCase
+import com.example.currencyexchangerates.domain.CurrencyRateUseCaseImpl
 import com.example.currencyexchangerates.domain.utils.CurrencyRateDataMapper
 import com.example.currencyexchangerates.domain.utils.CurrencyRateUIMapper
 import com.example.currencyexchangerates.ui.main.CurrencyRateViewModel
@@ -20,7 +21,7 @@ class KoinModule {
             single { CurrencyRateUIMapper(get()) }
             single { CurrencyRateRemoteDatasource() }
             single<CurrencyRateRepository> { CurrencyRateRepositoryImpl(get()) }
-            single { CurrencyRateUseCase(get(), get()) }
+            single<CurrencyRateUseCase> { CurrencyRateUseCaseImpl(get(), get()) }
             viewModel { CurrencyRateViewModel(get()) }
         }
     }

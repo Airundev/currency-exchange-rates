@@ -30,7 +30,7 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
         when (result.status) {
             LiveDataResult.Status.SUCCESS -> {
                 hideProgressDialog()
-                result.data?.let { adapter.setItems(it) }
+                result.data?.let { adapter.updateItems(it) }
                 lifecycle.addObserver(timer)
             }
             LiveDataResult.Status.LOADING -> {
@@ -46,7 +46,7 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        adapter = CurrencyListCellAdapter()
+        adapter = CurrencyListCellAdapter(this)
         adapter.setHasStableIds(true)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
@@ -54,15 +54,22 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
         progressDialog = ProgressDialog(this)
 
         currencyRateViewModel.liveDataResult.observe(this, resultObserver)
-        currencyRateViewModel.start(adapter.baseItemCurrency)
+        currencyRateViewModel.start()
     }
 
-    override fun onCurrencyCellClicked() {
+    override fun onCurrencyCellClicked(baseCurrency: String, baseValue: String) {
+        currencyRateViewModel.baseCurrency = baseCurrency
+        currencyRateViewModel.baseValue = baseValue
         recyclerView.layoutManager?.scrollToPosition(0)
     }
 
+    override fun onBaseValueUpdated(baseValue: String) {
+        currencyRateViewModel.baseValue = baseValue
+        currencyRateViewModel.updateValues(adapter.items)
+    }
+
     private fun onTimerTick() {
-        currencyRateViewModel.updateList(adapter.baseItemCurrency)
+        currencyRateViewModel.updateList(adapter.items)
     }
 
     private fun showProgressDialog() {

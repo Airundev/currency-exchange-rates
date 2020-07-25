@@ -8,9 +8,11 @@ import com.example.currencyexchangerates.domain.CurrencyRateUseCase
 import com.example.currencyexchangerates.ui.components.CurrencyListCellItem
 import com.example.currencyexchangerates.ui.main.utils.LiveDataResult
 
-class CurrencyRateViewModel(
-    private val currencyRateUseCase: CurrencyRateUseCase
-) : ViewModel(), CurrencyRateListener {
+class CurrencyRateViewModel(private val currencyRateUseCase: CurrencyRateUseCase)
+    : ViewModel(), CurrencyRateListener {
+
+    var baseCurrency = "EUR"
+    var baseValue = "1.00"
 
     private val _liveDataResult: MutableLiveData<LiveDataResult<MutableList<CurrencyListCellItem>>> by lazy {
         MutableLiveData<LiveDataResult<MutableList<CurrencyListCellItem>>>()
@@ -19,13 +21,17 @@ class CurrencyRateViewModel(
     val liveDataResult: LiveData<LiveDataResult<MutableList<CurrencyListCellItem>>>
         get() = _liveDataResult
 
-    fun start(baseCurrency: String) {
+    fun start() {
         _liveDataResult.postValue(LiveDataResult.loading(null))
-        currencyRateUseCase.execute(baseCurrency, this)
+        currencyRateUseCase.getData(baseCurrency, baseValue, this)
     }
 
-    fun updateList(baseCurrency: String) {
-        currencyRateUseCase.execute(baseCurrency, this)
+    fun updateList(currentList: MutableList<CurrencyListCellItem>) {
+        currencyRateUseCase.updateData(baseCurrency, baseValue, currentList, this)
+    }
+
+    fun updateValues(currentList: MutableList<CurrencyListCellItem>) {
+        currencyRateUseCase.updateValues(baseValue, currentList, this)
     }
 
     override fun onSuccess(ratesList: MutableList<CurrencyListCellItem>) {

@@ -2,10 +2,15 @@ package com.example.currencyexchangerates.domain.utils
 
 import com.example.currencyexchangerates.data.model.CurrencyRatesModel
 import com.example.currencyexchangerates.ui.components.CurrencyListCellItem
+import java.text.DecimalFormat
 
 class CurrencyRateUIMapper(private val dataMapper: CurrencyRateDataMapper) {
 
-    fun map(model: CurrencyRatesModel): MutableList<CurrencyListCellItem> {
+    private val df = DecimalFormat("0.00")
+    private val baseRate = 1.00
+
+    fun map(model: CurrencyRatesModel,
+            baseValue: String): MutableList<CurrencyListCellItem> {
         val itemList = mutableListOf<CurrencyListCellItem>()
         var currencyData: Pair<Int, String> = dataMapper.getDataForCurrency(model.baseCurrency)
 
@@ -13,7 +18,8 @@ class CurrencyRateUIMapper(private val dataMapper: CurrencyRateDataMapper) {
             currencyData.first,
             model.baseCurrency,
             currencyData.second,
-            1.00))
+            baseRate,
+            baseValue))
 
         for (rate in model.rates) {
             currencyData = dataMapper.getDataForCurrency(rate.key)
@@ -21,9 +27,34 @@ class CurrencyRateUIMapper(private val dataMapper: CurrencyRateDataMapper) {
                 currencyData.first,
                 rate.key,
                 currencyData.second,
-                rate.value))
+                rate.value,
+                df.format(baseValue.toDouble().times(rate.value))))
         }
 
         return itemList
+    }
+
+    fun map(model: CurrencyRatesModel,
+            baseValue: String,
+            currentList: MutableList<CurrencyListCellItem>): MutableList<CurrencyListCellItem> {
+
+        for (item in currentList) {
+            for (rate in model.rates) {
+                if (rate.key == item.currencyCode) {
+                    item.currencyRate = rate.value
+                    item.currencyValue =  df.format(baseValue.toDouble().times(rate.value))
+                    break
+                }
+            }
+        }
+        return currentList
+    }
+
+    fun updateValues(baseValue: String,
+                     currentList: MutableList<CurrencyListCellItem>) : MutableList<CurrencyListCellItem> {
+        for (item in currentList) {
+            item.currencyValue = df.format(baseValue.toDouble().times(item.currencyRate))
+        }
+        return currentList
     }
 }
