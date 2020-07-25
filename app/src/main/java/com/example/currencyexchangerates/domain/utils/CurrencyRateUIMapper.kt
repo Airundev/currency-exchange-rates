@@ -3,11 +3,16 @@ package com.example.currencyexchangerates.domain.utils
 import com.example.currencyexchangerates.data.model.CurrencyRatesModel
 import com.example.currencyexchangerates.ui.components.CurrencyListCellItem
 import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.util.*
 
 class CurrencyRateUIMapper(private val dataMapper: CurrencyRateDataMapper) {
 
-    private val df = DecimalFormat("0.00")
+    private val nf: NumberFormat = NumberFormat.getNumberInstance(Locale.ENGLISH)
+    private val df = nf as DecimalFormat
     private val baseRate = 1.00
+
+    init { df.applyPattern("0.00") }
 
     fun map(model: CurrencyRatesModel,
             baseValue: String): MutableList<CurrencyListCellItem> {
