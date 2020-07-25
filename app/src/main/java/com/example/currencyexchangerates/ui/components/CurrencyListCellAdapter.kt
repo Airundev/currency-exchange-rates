@@ -68,11 +68,6 @@ class CurrencyListCellAdapter(private var listener: CurrencyListCellListener)
         listener.onCurrencyCellClicked(items[position].currencyCode, items[position].currencyValue)
     }
 
-    interface CurrencyListCellListener {
-        fun onCurrencyCellClicked(baseCurrency: String, baseValue: String)
-        fun onBaseValueUpdated(baseValue: String)
-    }
-
     private val textWatcher: TextWatcher = object: TextWatcher {
         override fun afterTextChanged(p0: Editable?) {
             val baseValue = if (p0.toString() == "") { "0.00" } else { p0.toString() }
@@ -80,5 +75,10 @@ class CurrencyListCellAdapter(private var listener: CurrencyListCellListener)
         }
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+    }
+
+    interface CurrencyListCellListener {
+        fun onCurrencyCellClicked(baseCurrency: String, baseValue: String)
+        fun onBaseValueUpdated(baseValue: String)
     }
 }

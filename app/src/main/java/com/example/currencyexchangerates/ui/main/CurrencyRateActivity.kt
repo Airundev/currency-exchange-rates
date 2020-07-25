@@ -13,7 +13,6 @@ import com.example.currencyexchangerates.ui.main.utils.LiveDataResult
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-
 class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.CurrencyListCellListener {
 
     private val currencyRateViewModel: CurrencyRateViewModel by viewModel()
