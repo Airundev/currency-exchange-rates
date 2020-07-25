@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">currency-exchange-rates</string>
+    <string name="app_name">Currencies</string>
     <string name="appBarTitle">Rates</string>
     <string name="AUD">Australian Dollar</string>
     <string name="BGN">Bulgarian Lev</string>
