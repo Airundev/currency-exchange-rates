@@ -49,10 +49,6 @@ class CurrencyRateActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         currencyRateViewModel.liveDataResult.observe(this, resultObserver)
-        currencyRateViewModel.updateBaseData(
-            getString(R.string.baseCurrencyCode),
-            getString(R.string.baseCurrencyValue),
-            mutableListOf())
         lifecycle.addObserver(timer)
     }
 

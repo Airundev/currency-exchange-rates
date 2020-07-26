@@ -11,9 +11,9 @@ import com.example.currencyexchangerates.ui.main.utils.LiveDataResult
 class CurrencyRateViewModel(private val currencyRateUseCase: CurrencyRateUseCase)
     : ViewModel(), CurrencyRateListener {
 
-    private lateinit var baseCurrency: String
-    private lateinit var baseValue: String
-    private lateinit var currentList: MutableList<CurrencyListCellItem>
+    private var baseCurrency: String = BASE_CURRENCY
+    private var baseValue: String = BASE_VALUE
+    private var currentList: MutableList<CurrencyListCellItem> = mutableListOf()
 
     private val _liveDataResult: MutableLiveData<LiveDataResult<MutableList<CurrencyListCellItem>>> by lazy {
         MutableLiveData<LiveDataResult<MutableList<CurrencyListCellItem>>>()
@@ -45,5 +45,10 @@ class CurrencyRateViewModel(private val currencyRateUseCase: CurrencyRateUseCase
 
     override fun onError(error: Throwable) {
         _liveDataResult.postValue(LiveDataResult.error("", null))
+    }
+
+    companion object {
+        private const val BASE_CURRENCY = "EUR"
+        private const val BASE_VALUE = "1.00"
     }
 }
