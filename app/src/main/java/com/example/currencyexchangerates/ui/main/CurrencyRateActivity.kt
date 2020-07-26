@@ -12,7 +12,7 @@ import com.example.currencyexchangerates.ui.main.utils.LiveDataResult
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.CurrencyListCellListener {
+class CurrencyRateActivity : AppCompatActivity() {
 
     private val currencyRateViewModel: CurrencyRateViewModel by viewModel()
 
@@ -42,30 +42,26 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
-        adapter = CurrencyListCellAdapter(this)
+        adapter = CurrencyListCellAdapter(::onCurrencyCellClicked, currencyRateViewModel::updateValues)
         adapter.setHasStableIds(true)
         swipeLayout.setOnRefreshListener { if (timer.canRefresh) timer.onResume() }
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
         currencyRateViewModel.liveDataResult.observe(this, resultObserver)
+        currencyRateViewModel.updateBaseData(
+            getString(R.string.baseCurrencyCode),
+            getString(R.string.baseCurrencyValue),
+            mutableListOf())
         lifecycle.addObserver(timer)
     }
 
-    override fun onCurrencyCellClicked(baseCurrency: String, baseValue: String) {
-        currencyRateViewModel.baseCurrency = baseCurrency
-        currencyRateViewModel.baseValue = baseValue
+    private fun onCurrencyCellClicked(baseCurrency: String, baseValue: String, currentList: MutableList<CurrencyListCellItem>) {
+        currencyRateViewModel.updateBaseData(baseCurrency, baseValue, currentList)
         recyclerView.layoutManager?.scrollToPosition(0)
     }
 
-    override fun onBaseValueUpdated(baseValue: String) {
-        currencyRateViewModel.baseValue = baseValue
-        currencyRateViewModel.updateValues(adapter.items)
-    }
-
     private fun onTimerTick() {
-        if (timer.canTick) {
-            currencyRateViewModel.updateList(adapter.items)
-        }
+        if (timer.canTick) currencyRateViewModel.updateList()
     }
 }
