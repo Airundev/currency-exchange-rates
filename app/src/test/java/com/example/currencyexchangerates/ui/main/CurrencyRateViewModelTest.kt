@@ -4,10 +4,10 @@ import androidx.lifecycle.Observer
 import com.example.currencyexchangerates.domain.CurrencyRateListener
 import com.example.currencyexchangerates.domain.CurrencyRateUseCase
 import com.example.currencyexchangerates.ui.components.CurrencyListCellItem
-import com.example.currencyexchangerates.ui.main.utils.DataFactory.Companion.getItemList
-import com.example.currencyexchangerates.ui.main.utils.DataFactory.Companion.randomString
-import com.example.currencyexchangerates.ui.main.utils.InstantExecutorExtension
 import com.example.currencyexchangerates.ui.main.utils.LiveDataResult
+import com.example.currencyexchangerates.utils.DataFactory.Companion.getItemList
+import com.example.currencyexchangerates.utils.DataFactory.Companion.randomString
+import com.example.currencyexchangerates.utils.InstantExecutorExtension
 import com.google.common.truth.Truth
 import com.nhaarman.mockitokotlin2.*
 import io.reactivex.disposables.Disposable
@@ -38,27 +38,29 @@ class CurrencyRateViewModelTest {
 
     @Test
     fun `should send loading LiveData and update list when currentList is empty`() {
-        ArrangeBuilder().withUpdateDataSuccess()
+        val list = getItemList()
+        ArrangeBuilder().withUpdateDataSuccess(list)
 
         currencyRateViewModel.updateList()
 
         verify(resultObserver, times(1)).onChanged(LiveDataResult(LiveDataResult.Status.LOADING))
-        verify(resultObserver, times(1)).onChanged(LiveDataResult(LiveDataResult.Status.SUCCESS, getItemList()))
+        verify(resultObserver, times(1)).onChanged(LiveDataResult(LiveDataResult.Status.SUCCESS, list))
 
-        Truth.assertThat(currencyRateViewModel.liveDataResult.value?.data).isEqualTo(getItemList())
+        Truth.assertThat(currencyRateViewModel.liveDataResult.value?.data).isEqualTo(list)
         Truth.assertThat(currencyRateViewModel.liveDataResult.value?.status).isEqualTo(LiveDataResult.Status.SUCCESS)
     }
 
     @Test
     fun `should NOT send loading LiveData and update list when currentList is NOT empty`() {
-        ArrangeBuilder().withUpdateDataSuccess()
+        val list = getItemList()
+        ArrangeBuilder().withUpdateDataSuccess(list)
 
         currencyRateViewModel.updateBaseData(randomString(), randomString(), getItemList())
         currencyRateViewModel.updateList()
 
-        verify(resultObserver, times(1)).onChanged(LiveDataResult(LiveDataResult.Status.SUCCESS, getItemList()))
+        verify(resultObserver, times(1)).onChanged(LiveDataResult(LiveDataResult.Status.SUCCESS, list))
 
-        Truth.assertThat(currencyRateViewModel.liveDataResult.value?.data).isEqualTo(getItemList())
+        Truth.assertThat(currencyRateViewModel.liveDataResult.value?.data).isEqualTo(list)
         Truth.assertThat(currencyRateViewModel.liveDataResult.value?.status).isEqualTo(LiveDataResult.Status.SUCCESS)
     }
 
@@ -90,23 +92,24 @@ class CurrencyRateViewModelTest {
 
     @Test
     fun `should update list values`() {
-        ArrangeBuilder().withUpdateValuesSuccess()
+        val list = getItemList()
+        ArrangeBuilder().withUpdateValuesSuccess(list)
 
         currencyRateViewModel.updateBaseData(randomString(), randomString(), getItemList())
         currencyRateViewModel.updateValues(randomString())
 
-        verify(resultObserver, times(1)).onChanged(LiveDataResult(LiveDataResult.Status.SUCCESS, getItemList()))
+        verify(resultObserver, times(1)).onChanged(LiveDataResult(LiveDataResult.Status.SUCCESS, list))
 
-        Truth.assertThat(currencyRateViewModel.liveDataResult.value?.data).isEqualTo(getItemList())
+        Truth.assertThat(currencyRateViewModel.liveDataResult.value?.data).isEqualTo(list)
         Truth.assertThat(currencyRateViewModel.liveDataResult.value?.status).isEqualTo(LiveDataResult.Status.SUCCESS)
     }
 
     inner class ArrangeBuilder {
-        fun withUpdateDataSuccess(): ArrangeBuilder {
+        fun withUpdateDataSuccess(response: MutableList<CurrencyListCellItem>): ArrangeBuilder {
             val disposable: Disposable = mock()
             doAnswer {
                 val listener = it.arguments[3] as CurrencyRateListener
-                listener.onSuccess(getItemList())
+                listener.onSuccess(response)
                 disposable
             }.whenever(currencyRateUseCase).updateData(any(), any(), any(), any())
             return this
@@ -122,11 +125,11 @@ class CurrencyRateViewModelTest {
             return this
         }
 
-        fun withUpdateValuesSuccess(): ArrangeBuilder {
+        fun withUpdateValuesSuccess(response: MutableList<CurrencyListCellItem>): ArrangeBuilder {
             val disposable: Disposable = mock()
             doAnswer {
                 val listener = it.arguments[2] as CurrencyRateListener
-                listener.onSuccess(getItemList())
+                listener.onSuccess(response)
                 disposable
             }.whenever(currencyRateUseCase).updateValues(any(), any(), any())
             return this

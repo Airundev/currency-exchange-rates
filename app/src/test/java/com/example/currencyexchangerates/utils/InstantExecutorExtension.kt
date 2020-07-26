@@ -1,4 +1,4 @@
-package com.example.currencyexchangerates.ui.main.utils
+package com.example.currencyexchangerates.utils
 
 import androidx.arch.core.executor.ArchTaskExecutor
 import androidx.arch.core.executor.TaskExecutor
