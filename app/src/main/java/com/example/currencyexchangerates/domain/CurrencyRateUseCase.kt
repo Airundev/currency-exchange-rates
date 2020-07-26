@@ -5,9 +5,6 @@ import io.reactivex.disposables.Disposable
 
 
 interface CurrencyRateUseCase {
-    fun getData(baseCurrency: String,
-                baseValue: String,
-                listener: CurrencyRateListener): Disposable
 
     fun updateData(baseCurrency: String,
                    baseValue: String,

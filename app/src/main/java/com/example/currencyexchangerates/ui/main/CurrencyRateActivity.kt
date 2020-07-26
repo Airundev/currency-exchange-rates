@@ -27,7 +27,6 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
             LiveDataResult.Status.SUCCESS -> {
                 swipeLayout.isRefreshing = false
                 result.data?.let { adapter.updateItems(it) }
-                lifecycle.addObserver(timer)
             }
             LiveDataResult.Status.LOADING -> {
                 swipeLayout.isRefreshing = true
@@ -45,12 +44,12 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
 
         adapter = CurrencyListCellAdapter(this)
         adapter.setHasStableIds(true)
-        swipeLayout.setOnRefreshListener { timer.onResume() }
+        swipeLayout.setOnRefreshListener { if (timer.canRefresh) timer.onResume() }
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
         currencyRateViewModel.liveDataResult.observe(this, resultObserver)
-        currencyRateViewModel.start()
+        lifecycle.addObserver(timer)
     }
 
     override fun onCurrencyCellClicked(baseCurrency: String, baseValue: String) {
@@ -65,6 +64,8 @@ class CurrencyRateActivity : AppCompatActivity(), CurrencyListCellAdapter.Curren
     }
 
     private fun onTimerTick() {
-        currencyRateViewModel.updateList(adapter.items)
+        if (timer.canTick) {
+            currencyRateViewModel.updateList(adapter.items)
+        }
     }
 }

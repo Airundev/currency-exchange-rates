@@ -11,21 +11,6 @@ class CurrencyRateUseCaseImpl(
     private val repository: CurrencyRateRepository,
     private val mapper: CurrencyRateUIMapper) : CurrencyRateUseCase {
 
-    override fun getData(baseCurrency: String,
-                         baseValue: String,
-                         listener: CurrencyRateListener): Disposable {
-        return repository.getCurrencies(baseCurrency)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                {
-                    listener.onSuccess(mapper.map(it, baseValue))
-                }, {
-                    listener.onError(it)
-                }
-            )
-    }
-
     override fun updateData(baseCurrency: String,
                             baseValue: String,
                             currentList: MutableList<CurrencyListCellItem>,
