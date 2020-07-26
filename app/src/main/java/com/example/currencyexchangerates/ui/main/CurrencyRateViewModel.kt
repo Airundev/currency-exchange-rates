@@ -21,12 +21,8 @@ class CurrencyRateViewModel(private val currencyRateUseCase: CurrencyRateUseCase
     val liveDataResult: LiveData<LiveDataResult<MutableList<CurrencyListCellItem>>>
         get() = _liveDataResult
 
-    fun start() {
-        _liveDataResult.postValue(LiveDataResult.loading(null))
-        currencyRateUseCase.getData(baseCurrency, baseValue, this)
-    }
-
     fun updateList(currentList: MutableList<CurrencyListCellItem>) {
+        if (currentList.isEmpty()) _liveDataResult.postValue(LiveDataResult.loading(null))
         currencyRateUseCase.updateData(baseCurrency, baseValue, currentList, this)
     }
 
