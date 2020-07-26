@@ -1,5 +1,6 @@
 package com.example.currencyexchangerates.di
 
+import com.example.currencyexchangerates.data.ServiceBuilder
 import com.example.currencyexchangerates.data.datasource.CurrencyRateRemoteDatasource
 import com.example.currencyexchangerates.data.repository.CurrencyRateRepository
 import com.example.currencyexchangerates.data.repository.CurrencyRateRepositoryImpl
@@ -21,7 +22,8 @@ class KoinModule {
 
             single { CurrencyRateDataMapper(androidContext()) }
             single { CurrencyRateUIMapper(get()) }
-            single { CurrencyRateRemoteDatasource() }
+            single { ServiceBuilder.buildService() }
+            single { CurrencyRateRemoteDatasource(get()) }
             single<CurrencyRateRepository> { CurrencyRateRepositoryImpl(get()) }
             single<CurrencyRateUseCase> { CurrencyRateUseCaseImpl(get(), get(), Schedulers.io(), AndroidSchedulers.mainThread()) }
             viewModel { CurrencyRateViewModel(get()) }
