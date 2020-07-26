@@ -20,7 +20,7 @@ class DataFactory {
             return (1..bound).shuffled().first()
         }
 
-        fun randomDouble(): Double {
+        private fun randomDouble(): Double {
             return Math.random()
         }
 
@@ -32,6 +32,10 @@ class DataFactory {
                 add(CurrencyListCellItem(randomInt(), randomString(), randomString(), randomDouble(), randomString()))
                 add(CurrencyListCellItem(randomInt(), randomString(), randomString(), randomDouble(), randomString()))
             }
+        }
+
+        fun getCurrencyData(): Pair<Int, String> {
+            return Pair(randomInt(), randomString())
         }
 
         fun getRatesModel(): CurrencyRatesModel {
