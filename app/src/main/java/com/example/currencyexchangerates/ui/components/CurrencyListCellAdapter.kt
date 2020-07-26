@@ -7,21 +7,18 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.currencyexchangerates.R
-import com.example.currencyexchangerates.databinding.CurrencyListCellBinding
 import com.example.currencyexchangerates.ui.components.utils.DataBindingViewHolder
 import kotlinx.android.synthetic.main.currency_list_cell.view.*
 
-class CurrencyListCellAdapter(private var listener: CurrencyListCellListener)
+class CurrencyListCellAdapter(private var onBaseCurrencyClicked: (String, String, MutableList<CurrencyListCellItem>) -> Unit,
+                              private var onBaseValueUpdated: (String) -> Unit)
     : RecyclerView.Adapter<DataBindingViewHolder>() {
 
-    var items: MutableList<CurrencyListCellItem> = mutableListOf()
-
-    private var binding: CurrencyListCellBinding? = null
+    private var items: MutableList<CurrencyListCellItem> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBindingViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)
-        binding = DataBindingUtil.inflate(inflater, viewType, parent, false)
-        val viewHolder = DataBindingViewHolder(binding!!)
+        val viewHolder = DataBindingViewHolder(DataBindingUtil.inflate(inflater, viewType, parent, false))
         viewHolder.itemView.setOnClickListener { viewHolder.itemView.currencyListCellEdit.requestFocus() }
         viewHolder.itemView.currencyListCellEdit.apply { setOnFocusChangeListener { _, focused ->
             when(focused) {
@@ -45,15 +42,9 @@ class CurrencyListCellAdapter(private var listener: CurrencyListCellListener)
         holder.bind(item)
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return R.layout.currency_list_cell
-    }
-
+    override fun getItemViewType(position: Int): Int = R.layout.currency_list_cell
     override fun getItemCount(): Int = items.size
-
-    override fun getItemId(position: Int): Long {
-        return items[position].currencyCode.hashCode().toLong()
-    }
+    override fun getItemId(position: Int): Long = items[position].currencyCode.hashCode().toLong()
 
     fun updateItems(newItems: MutableList<CurrencyListCellItem>) {
         items = newItems
@@ -65,20 +56,15 @@ class CurrencyListCellAdapter(private var listener: CurrencyListCellListener)
         items.remove(item)
         items.add(0, item)
         notifyItemMoved(position, 0)
-        listener.onCurrencyCellClicked(items[position].currencyCode, items[position].currencyValue)
+        onBaseCurrencyClicked(item.currencyCode, item.currencyValue, items)
     }
 
     private val textWatcher: TextWatcher = object: TextWatcher {
         override fun afterTextChanged(p0: Editable?) {
-            val baseValue = if (p0.toString() == "") { "0.00" } else { p0.toString() }
-            listener.onBaseValueUpdated(baseValue)
+            val baseValue = if (p0.toString() == "") "0.00" else p0.toString()
+            onBaseValueUpdated(baseValue)
         }
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-    }
-
-    interface CurrencyListCellListener {
-        fun onCurrencyCellClicked(baseCurrency: String, baseValue: String)
-        fun onBaseValueUpdated(baseValue: String)
     }
 }

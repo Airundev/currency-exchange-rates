@@ -21,6 +21,7 @@ class CurrencyRateUIMapper(private val dataMapper: CurrencyRateDataMapper) {
         if (currentList.isEmpty()) return map(model, baseValue)
 
         for (item in currentList) {
+            if (item.currencyCode == currentList[0].currencyCode) item.currencyRate = baseRate
             for (rate in model.rates) {
                 if (rate.key == item.currencyCode) {
                     item.currencyRate = rate.value
