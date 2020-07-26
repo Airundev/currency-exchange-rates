@@ -3,21 +3,23 @@ package com.example.currencyexchangerates.domain
 import com.example.currencyexchangerates.data.repository.CurrencyRateRepository
 import com.example.currencyexchangerates.domain.utils.CurrencyRateUIMapper
 import com.example.currencyexchangerates.ui.components.CurrencyListCellItem
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.Scheduler
 import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
 
 class CurrencyRateUseCaseImpl(
     private val repository: CurrencyRateRepository,
-    private val mapper: CurrencyRateUIMapper) : CurrencyRateUseCase {
+    private val mapper: CurrencyRateUIMapper,
+    private val backgroundThread: Scheduler,
+    private val mainThread: Scheduler
+) : CurrencyRateUseCase {
 
     override fun updateData(baseCurrency: String,
                             baseValue: String,
                             currentList: MutableList<CurrencyListCellItem>,
                             listener: CurrencyRateListener): Disposable {
         return repository.getCurrencies(baseCurrency)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(backgroundThread)
+            .observeOn(mainThread)
             .subscribe(
                 {
                     listener.onSuccess(mapper.map(it, baseValue, currentList))
