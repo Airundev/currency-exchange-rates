@@ -12,14 +12,6 @@ android {
         enabled = true
     }
 
-    testOptions {
-        animationsDisabled = true
-        unitTests {
-            includeAndroidResources = true
-            returnDefaultValues = true
-        }
-    }
-
     defaultConfig {
         applicationId "com.example.currencyexchangerates"
         minSdkVersion 23
