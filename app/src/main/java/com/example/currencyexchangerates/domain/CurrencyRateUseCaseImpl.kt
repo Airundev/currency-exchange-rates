@@ -9,9 +9,23 @@ import io.reactivex.disposables.Disposable
 class CurrencyRateUseCaseImpl(
     private val repository: CurrencyRateRepository,
     private val mapper: CurrencyRateUIMapper,
-    private val backgroundThread: Scheduler,
-    private val mainThread: Scheduler
+    private val backgroundThread: Scheduler
 ) : CurrencyRateUseCase {
+
+    override fun getData(baseCurrency: String,
+                baseValue: String,
+                currentList: MutableList<CurrencyListCellItem>,
+                listener: CurrencyRateListener): Disposable {
+        return repository.getLocalCurrencies()
+            .subscribeOn(backgroundThread)
+            .subscribe(
+                {
+                    listener.onSuccess(it)
+                }, {
+                    updateData(baseCurrency, baseValue, currentList, listener)
+                }
+            )
+    }
 
     override fun updateData(baseCurrency: String,
                             baseValue: String,
@@ -19,10 +33,11 @@ class CurrencyRateUseCaseImpl(
                             listener: CurrencyRateListener): Disposable {
         return repository.getCurrencies(baseCurrency)
             .subscribeOn(backgroundThread)
-            .observeOn(mainThread)
+            .map { mapper.map(it, baseValue, currentList) }
             .subscribe(
                 {
-                    listener.onSuccess(mapper.map(it, baseValue, currentList))
+                    repository.setCurrencies(it)
+                    listener.onSuccess(it)
                 }, {
                     listener.onError(it)
                 }
@@ -32,6 +47,8 @@ class CurrencyRateUseCaseImpl(
     override fun updateValues(baseValue: String,
                      currentList: MutableList<CurrencyListCellItem>,
                      listener: CurrencyRateListener) {
-        listener.onSuccess(mapper.updateValues(baseValue, currentList))
+        val updatedList = mapper.updateValues(baseValue, currentList)
+        repository.setCurrencies(updatedList)
+        listener.onSuccess(updatedList)
     }
 }
