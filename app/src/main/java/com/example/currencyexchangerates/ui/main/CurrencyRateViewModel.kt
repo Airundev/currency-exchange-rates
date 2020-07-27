@@ -29,8 +29,12 @@ class CurrencyRateViewModel(private val currencyRateUseCase: CurrencyRateUseCase
     }
 
     fun updateList() {
-        if (currentList.isEmpty()) _liveDataResult.postValue(LiveDataResult.loading(null))
-        currencyRateUseCase.updateData(baseCurrency, baseValue, currentList, this)
+        if (currentList.isEmpty()) {
+            _liveDataResult.postValue(LiveDataResult.loading(null))
+            currencyRateUseCase.getData(baseCurrency, baseValue, currentList, this)
+        } else {
+            currencyRateUseCase.updateData(baseCurrency, baseValue, currentList, this)
+        }
     }
 
     fun updateValues(baseValue: String) {
@@ -39,7 +43,7 @@ class CurrencyRateViewModel(private val currencyRateUseCase: CurrencyRateUseCase
     }
 
     override fun onSuccess(ratesList: MutableList<CurrencyListCellItem>) {
-        currentList = ratesList
+        updateBaseData(ratesList[0].currencyCode, ratesList[0].currencyValue, ratesList)
         _liveDataResult.postValue(LiveDataResult.success(ratesList))
     }
 

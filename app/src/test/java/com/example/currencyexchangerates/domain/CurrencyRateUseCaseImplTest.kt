@@ -25,7 +25,7 @@ class CurrencyRateUseCaseImplTest {
 
     @BeforeEach
     fun setup() {
-        currencyRateUseCase = CurrencyRateUseCaseImpl(currencyRateRepository, currencyRateUIMapper, testScheduler, testScheduler)
+        currencyRateUseCase = CurrencyRateUseCaseImpl(currencyRateRepository, currencyRateUIMapper, testScheduler)
     }
 
     @AfterEach
