@@ -18,3 +18,5 @@ Koin... the eternal dilemma with Koin and Dagger. Honestly I just went with Koin
 
 When it comes down to Rx or Coroutines, I always choose Rx simply because that's what I have experience with. Coroutines are very good, but I feel like I have more control with Rx.
 
+# How does it look in action?
+<img src="https://user-images.githubusercontent.com/61659216/88587631-85df7300-d056-11ea-92fd-c72681c2c6f4.gif" width=314>
