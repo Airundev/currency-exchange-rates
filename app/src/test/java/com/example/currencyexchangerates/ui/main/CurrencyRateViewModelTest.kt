@@ -39,7 +39,7 @@ class CurrencyRateViewModelTest {
     @Test
     fun `should send loading LiveData and update list when currentList is empty`() {
         val list = getItemList()
-        ArrangeBuilder().withUpdateDataSuccess(list)
+        ArrangeBuilder().withGetDataSuccess(list)
 
         currencyRateViewModel.updateList()
 
@@ -66,7 +66,7 @@ class CurrencyRateViewModelTest {
 
     @Test
     fun `should send loading LiveData and throw error when currentList is empty`() {
-        ArrangeBuilder().withUpdateDataError()
+        ArrangeBuilder().withGetDataError()
 
         currencyRateViewModel.updateList()
 
@@ -105,6 +105,26 @@ class CurrencyRateViewModelTest {
     }
 
     inner class ArrangeBuilder {
+        fun withGetDataSuccess(response: MutableList<CurrencyListCellItem>): ArrangeBuilder {
+            val disposable: Disposable = mock()
+            doAnswer {
+                val listener = it.arguments[3] as CurrencyRateListener
+                listener.onSuccess(response)
+                disposable
+            }.whenever(currencyRateUseCase).getData(any(), any(), any(), any())
+            return this
+        }
+
+        fun withGetDataError(): ArrangeBuilder {
+            val disposable: Disposable = mock()
+            doAnswer {
+                val listener = it.arguments[3] as CurrencyRateListener
+                listener.onError(Throwable())
+                disposable
+            }.whenever(currencyRateUseCase).getData(any(), any(), any(), any())
+            return this
+        }
+
         fun withUpdateDataSuccess(response: MutableList<CurrencyListCellItem>): ArrangeBuilder {
             val disposable: Disposable = mock()
             doAnswer {

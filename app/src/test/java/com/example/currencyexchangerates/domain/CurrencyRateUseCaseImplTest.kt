@@ -34,9 +34,51 @@ class CurrencyRateUseCaseImplTest {
     }
 
     @Test
+    fun `should return data if getLocalCurrencies is successful`() {
+        ArrangeBuilder().withLocalCurrenciesSuccess()
+
+        currencyRateUseCase.getData(randomString(), randomString(), getItemList(), listener)
+        testScheduler.triggerActions()
+
+        inOrder(currencyRateRepository, listener) {
+            verify(currencyRateRepository).getLocalCurrencies()
+            verify(listener).onSuccess(any())
+        }
+    }
+
+    @Test
+    fun `should return mapped data if getLocalCurrencies fails and updateData is successful`() {
+        ArrangeBuilder().withLocalCurrenciesError()
+        ArrangeBuilder().withRepositorySuccess()
+
+        currencyRateUseCase.getData(randomString(), randomString(), getItemList(), listener)
+        testScheduler.triggerActions()
+
+        inOrder(currencyRateRepository, listener) {
+            verify(currencyRateRepository).getLocalCurrencies()
+            verify(currencyRateRepository).getCurrencies(any())
+            verify(listener).onSuccess(any())
+        }
+    }
+
+    @Test
+    fun `should return error if getLocalCurrencies fails and updateData fails`() {
+        ArrangeBuilder().withLocalCurrenciesError()
+        ArrangeBuilder().withRepositoryError()
+
+        currencyRateUseCase.getData(randomString(), randomString(), getItemList(), listener)
+        testScheduler.triggerActions()
+
+        inOrder(currencyRateRepository, listener) {
+            verify(currencyRateRepository).getLocalCurrencies()
+            verify(currencyRateRepository).getCurrencies(any())
+            verify(listener).onError(any())
+        }
+    }
+
+    @Test
     fun `should return mapped data if updateData call is successful`() {
         ArrangeBuilder().withRepositorySuccess()
-        ArrangeBuilder().withMappedData()
 
         currencyRateUseCase.updateData(randomString(), randomString(), getItemList(), listener)
         testScheduler.triggerActions()
@@ -67,13 +109,24 @@ class CurrencyRateUseCaseImplTest {
 
         currencyRateUseCase.updateValues(randomString(), getItemList(), listener)
 
-        inOrder(currencyRateUIMapper, listener) {
+        inOrder(currencyRateUIMapper, currencyRateRepository, listener) {
             verify(currencyRateUIMapper).updateValues(any(), any())
-            listener.onSuccess(any())
+            verify(currencyRateRepository).setCurrencies(any())
+            verify(listener).onSuccess(any())
         }
     }
 
     inner class ArrangeBuilder {
+        fun withLocalCurrenciesSuccess(): ArrangeBuilder {
+            doReturn(Single.just(getItemList())).whenever(currencyRateRepository).getLocalCurrencies()
+            return this
+        }
+
+        fun withLocalCurrenciesError(): ArrangeBuilder {
+            doReturn(Single.error<Throwable>(Throwable())).whenever(currencyRateRepository).getLocalCurrencies()
+            return this
+        }
+
         fun withRepositorySuccess(): ArrangeBuilder {
             doReturn(Single.just(getRatesModel())).whenever(currencyRateRepository).getCurrencies(any())
             return this
@@ -81,11 +134,6 @@ class CurrencyRateUseCaseImplTest {
 
         fun withRepositoryError(): ArrangeBuilder {
             doReturn(Single.error<Throwable>(Throwable())).whenever(currencyRateRepository).getCurrencies(any())
-            return this
-        }
-
-        fun withMappedData(): ArrangeBuilder {
-            doReturn(getItemList()).whenever(currencyRateUIMapper).map(any(), any(), any())
             return this
         }
 
