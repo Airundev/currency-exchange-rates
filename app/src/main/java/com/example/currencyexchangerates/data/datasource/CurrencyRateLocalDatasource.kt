@@ -16,7 +16,7 @@ class CurrencyRateLocalDatasource(private val currencyDatabase: CurrencyDataBase
     fun setCurrencyList(list: MutableList<CurrencyListCellItem>) {
         val callable = Callable {
             currencyDatabase.currencyListItemDAO().deleteList()
-            currencyDatabase.currencyListItemDAO().insertAll(CurrencyListItemEntity(list))
+            currencyDatabase.currencyListItemDAO().insertAll(CurrencyListItemEntity(0, list))
         }
         val future = Executors.newSingleThreadExecutor().submit(callable)
         return future.get()

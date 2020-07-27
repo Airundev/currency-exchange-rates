@@ -7,6 +7,6 @@ import com.example.currencyexchangerates.ui.components.CurrencyListCellItem
 
 @Entity
 data class CurrencyListItemEntity (
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo(name = "currencyListItem") val currencyListItem: MutableList<CurrencyListCellItem>
 )

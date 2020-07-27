@@ -53,6 +53,13 @@ class CurrencyListCellAdapter(private var onBaseCurrencyClicked: (String, String
 
     private fun onCurrencyClicked(position: Int) {
         val item = items[position]
+        /*This two lines are just so offline mode works properly.
+        It doesn't have any real impact on the online mode
+        since in that case the rate will update on it's own via the API call.*/
+        items[0].currencyRate = item.currencyRate
+        item.currencyRate = 1.0
+        /*Do this instead of Collections.swap() so the item that was first on the list
+        falls on second place, instead of being swapped to the selected item's old position */
         items.remove(item)
         items.add(0, item)
         notifyItemMoved(position, 0)
