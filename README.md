@@ -1,5 +1,4 @@
-# What is this?
-<img src="https://user-images.githubusercontent.com/61659216/88586683-0309e880-d055-11ea-8a08-29d4d80e9df3.png" width=64>
+# What is this? <img src="https://user-images.githubusercontent.com/61659216/88586683-0309e880-d055-11ea-8a08-29d4d80e9df3.png" width=48>
 Currency exchange rate converter that uses a public Revolut API for the exchange rates
 
 # What did you use?
