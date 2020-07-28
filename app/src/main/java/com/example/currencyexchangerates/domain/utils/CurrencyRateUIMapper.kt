@@ -36,7 +36,9 @@ class CurrencyRateUIMapper(private val dataMapper: CurrencyRateDataMapper) {
     fun updateValues(baseValue: String,
                      currentList: MutableList<CurrencyListCellItem>) : MutableList<CurrencyListCellItem> {
         for (item in currentList) {
-            item.currencyValue = df.format(baseValue.toDouble().times(item.currencyRate))
+            //This is only relevant for offline mode, since it can't update the rates on its own
+            val rate = item.currencyRate/currentList[0].currencyRate
+            item.currencyValue = df.format(baseValue.toDouble().times(rate))
         }
         return currentList
     }
