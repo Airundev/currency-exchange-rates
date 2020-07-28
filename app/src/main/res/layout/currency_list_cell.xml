@@ -61,7 +61,7 @@
             tools:text="1183.06"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:maxLength="19"
+            android:maxLength="15"
             android:inputType="numberDecimal"
             app:layout_constraintTop_toTopOf="@id/currencyListCellImage"
             app:layout_constraintBottom_toBottomOf="@id/currencyListCellImage"

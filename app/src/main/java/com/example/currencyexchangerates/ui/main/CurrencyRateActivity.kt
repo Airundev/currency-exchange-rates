@@ -9,6 +9,7 @@ import com.example.currencyexchangerates.ui.components.CurrencyListCellAdapter
 import com.example.currencyexchangerates.ui.components.CurrencyListCellItem
 import com.example.currencyexchangerates.ui.main.utils.LifecycleAwareTimer
 import com.example.currencyexchangerates.ui.main.utils.LiveDataResult
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.main_activity.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -34,6 +35,7 @@ class CurrencyRateActivity : AppCompatActivity() {
             LiveDataResult.Status.ERROR -> {
                 swipeLayout.isRefreshing = false
                 timer.onPause()
+                Snackbar.make(swipeLayout, getString(R.string.errorText), Snackbar.LENGTH_LONG).show()
             }
         }
     }
