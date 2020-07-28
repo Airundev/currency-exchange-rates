@@ -20,9 +20,9 @@ import org.koin.dsl.module
 class KoinModule {
 
     companion object {
+        private const val DATABASE = "currencyDatabase"
         val appModule = module {
-
-            single { Room.databaseBuilder(androidContext(), CurrencyDataBase::class.java, "currencyDatabase").build() }
+            single { Room.databaseBuilder(androidContext(), CurrencyDataBase::class.java, DATABASE).build().currencyListItemDAO() }
             single { CurrencyRateDataMapper(androidContext()) }
             single { CurrencyRateUIMapper(get()) }
             single { ServiceBuilder.buildService() }
